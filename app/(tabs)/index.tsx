@@ -1,31 +1,33 @@
-import { StyleSheet } from 'react-native';
-
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
-
-export default function TabOneScreen() {
+import { View, Text } from 'react-native'
+import React, { useMemo, useState } from 'react'
+import { Link, Stack } from 'expo-router'
+import tw from 'twrnc'
+import { Header } from 'react-native/Libraries/NewAppScreen'
+import CustomHeader from '@/Components/CustomHeader'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import Listing from '@/Components/Listing'
+import { airbnb } from '@/constants/data'
+import ListingMap from '@/Components/ListingMap'
+import {Geo} from '@/constants/Geo'
+import LidtingSheet from '@/Components/LidtingSheet'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import 'react-native-gesture-handler';
+const Page = () => {
+  const [category,setCategory]=useState('Homes')
+  const onDataChanged=(category:string)=>{
+    setCategory(category)
+  }
+  const items = useMemo(()=>airbnb as any,[])
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
-    </View>
-  );
+        <GestureHandlerRootView style={tw`-mt-10`}>
+            <Stack.Screen options={{
+              header:()=><CustomHeader onCategoryChanged={onDataChanged}/>
+              
+            }}/>
+            <ListingMap listingDataGeo={Geo}/>
+            <LidtingSheet listing={items} category={category}/>
+      </GestureHandlerRootView>
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
+export default Page
